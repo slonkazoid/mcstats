@@ -1,0 +1,19 @@
+{
+  "name": "mcstats",
+  "version": "0.1.0",
+  "description": "Minecraft Server Status Discord Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "express": "^4.17.1",
+    "minecraft-protocol": "^1.15.0",
+    "sqlite3": "^5.0.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "license": "GPL-3.0"
+}
