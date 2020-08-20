@@ -8,12 +8,21 @@
   },
   "dependencies": {
     "discord.js": "^12.2.0",
-    "express": "^4.17.1",
     "minecraft-protocol": "^1.15.0",
     "sqlite3": "^5.0.0"
   },
   "engines": {
     "node": "12.x"
   },
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uAliFurkanY/mcstats.git"
+  },
+  "author": "Ali Furkan YILDIZ",
+  "bugs": {
+    "url": "https://github.com/uAliFurkanY/mcstats/issues"
+  },
+  "homepage": "https://github.com/uAliFurkanY/mcstats#readme"
 }

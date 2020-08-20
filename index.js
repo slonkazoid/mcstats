@@ -1,15 +1,7 @@
 console.log("Started");
-
-const express = require("express");
 const Discord = require("discord.js");
 const mc = require("minecraft-protocol");
 const sqlite3 = require("sqlite3");
-
-const app = express();
-app.use(express.static("public"));
-app.listen(3000, () => {
-	console.log("Listening on port 80");
-});
 
 const db = new sqlite3.Database("servers.db");
 db.run(`CREATE TABLE IF NOT EXISTS \`servers\` (
