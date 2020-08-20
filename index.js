@@ -1,4 +1,5 @@
 console.log("Started");
+require("dotenv").config();
 const Discord = require("discord.js");
 const mc = require("minecraft-protocol");
 const sqlite3 = require("sqlite3");
@@ -11,7 +12,7 @@ db.run(`CREATE TABLE IF NOT EXISTS \`servers\` (
 );`);
 
 const client = new Discord.Client();
-client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN).catch(console.log);
 
 const prefix = "+";
 
