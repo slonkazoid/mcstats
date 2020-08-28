@@ -16,7 +16,16 @@ client.login(process.env.BOT_TOKEN).catch(console.log);
 
 const prefix = "+";
 
-client.on("ready", () => console.log("Bot Ready"));
+client.on("ready", () => {
+	console.log("Bot Ready");
+	client.user.setStatus("online");
+	client.user.setPresence({
+		activity: {
+			name: "=help",
+			type: "WATCHING",
+		},
+	});
+});
 
 client.on("message", function (msg) {
 	if (!msg.guild) return;
