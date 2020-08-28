@@ -21,7 +21,7 @@ client.on("ready", () => {
 	client.user.setStatus("online");
 	client.user.setPresence({
 		activity: {
-			name: "=help",
+			name: prefix + "help",
 			type: "WATCHING",
 		},
 	});
