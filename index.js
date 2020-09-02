@@ -11,7 +11,8 @@ db.run(`CREATE TABLE IF NOT EXISTS \`servers\` (
 	\`PORT\` TEXT DEFAULT '25565'
 );`);
 
-const client = new Discord.Client();
+const i = new Discord.Intents(Discord.Intents.NON_PRIVILEGED).remove("GUILD_MESSAGE_TYPING");
+const client = new Discord.Client({ ws: { intents: i } });
 client.login(process.env.BOT_TOKEN).catch(console.log);
 
 const prefix = "+";
