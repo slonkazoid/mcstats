@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 module.exports = {
 	name: "server",
 	description: "Get the default server for this guild.",
-	usage: "server [new]",
+	usage: "server [host:port]",
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message
@@ -17,11 +17,12 @@ module.exports = {
 				`Default server changed to '${args[0].replace(/@/g, "\\@")}'.`
 			);
 		} else {
-			let _;
 			message.channel.send(
-				`This guild's default server is ${(_ = gld.server
-					? `'${_.replace(/@/g, "\\@")}'`
-					: `not set.`)}.`
+				`This guild's default server is ${
+					gld.server
+						? `'${gld.server.replace(/@/g, "\\@")}'`
+						: `not set`
+				}.`
 			);
 		}
 	},

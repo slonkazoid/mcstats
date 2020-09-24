@@ -66,6 +66,7 @@ client.on("message", (message) => {
 	try {
 		client.commands.get(command).execute(client, message, args, gld);
 	} catch (e) {
+		console.log(e);
 		message.reply("couldn't execute command: `" + e.message + "`!");
 	}
 });
