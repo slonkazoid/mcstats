@@ -4,7 +4,7 @@ const mc = require("minecraft-protocol");
 module.exports = {
 	name: "status",
 	description:
-		"Display the status of the specified server or the default one. (Alias: 'stats')",
+		"Display the status of the specified server or the default one.",
 	usage: "name args",
 	/**
 	 * @param {Discord.Client} client
