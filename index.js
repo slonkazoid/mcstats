@@ -1,143 +1,71 @@
-console.log("Started");
 require("dotenv").config();
 const Discord = require("discord.js");
-const mc = require("minecraft-protocol");
-const sqlite3 = require("sqlite3");
+const shlex = require("shlex");
+const fs = require("fs");
+const commandFiles = fs
+	.readdirSync("./commands")
+	.filter((file) => file.endsWith(".js"));
 
-const db = new sqlite3.Database("servers.db");
-db.run(`CREATE TABLE IF NOT EXISTS \`servers\` (
-	\`DISCORD\` TEXT NOT NULL,
-	\`IP\` TEXT NOT NULL,
-	\`PORT\` TEXT DEFAULT '25565'
-);`);
+function log(str) {
+	if (process.env.NO_LOG) return;
+	else return console.log(str);
+}
+process.on("unhandledRejection", () => {});
 
-const i = new Discord.Intents(Discord.Intents.NON_PRIVILEGED).remove("GUILD_MESSAGE_TYPING");
-const client = new Discord.Client({ ws: { intents: i } });
-client.login(process.env.BOT_TOKEN).catch(console.log);
+const prefix = process.env.PREFIX || "mc";
 
-const prefix = "+";
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
+client
+	.login(process.env.TOKEN)
+	.then(() => {
+		log("LOGIN");
+	})
+	.catch((e) => {
+		log("LOGIN FAILED");
+		log(e);
+		process.exit(1);
+	});
+
+const guildData = require("guild-data")(client, { prefix: prefix });
 
 client.on("ready", () => {
-	console.log("Bot Ready");
-	client.user.setStatus("online");
-	client.user.setPresence({
-		activity: {
-			name: prefix + "help",
-			type: "WATCHING",
-		},
-	});
+	log("READY");
 });
 
-client.on("message", function (msg) {
-	if (!msg.guild) return;
-	if (msg.author.bot) return;
-	if (!msg.content.startsWith(prefix)) return;
+client.on("message", (message) => {
+	let user = message.author;
+	let mention = false;
+	let id = client.user.id;
+	if (!message.guild) return;
+	if (user.bot) return;
+	const gld = guildData(message.guild.id);
+	if (
+		!message.content.startsWith(gld.prefix) &&
+		!message.content.startsWith("<@!" + id + ">")
+	)
+		return;
+	else if (message.content.startsWith("<@!" + id + ">")) mention = true;
 
-	const serverID = msg.guild.id;
+	let commandBody;
+	mention
+		? (commandBody = message.content.slice(id.length + 4))
+		: (commandBody = message.content.slice(gld.prefix.length));
+	const args = shlex.split(commandBody);
+	let command = args.shift();
 
-	const commandBody = msg.content.slice(prefix.length);
-	const args = commandBody.split(" ");
-	const command = args.shift().toLowerCase();
+	if (!command && mention) command = "help";
+	else if (!command) return;
 
-	switch (command) {
-		case "help":
-			msg.channel.send(`\`\`\`
-${prefix}help     Sends this
-${prefix}invite   Sends an invite link for the bot
-${prefix}server   Sets the default Minecraft server for this Discord server
-${prefix}motd     Displays the server's Message Of The Day
-${prefix}ping     Displays the latency to the server
-${prefix}players  Displays how many players are online (lists them if it can)
-\`\`\``);
-			break;
-		case "invite":
-			msg.channel.send(
-				"https://discord.com/api/oauth2/authorize?client_id=740191553238335560&permissions=2048&redirect_uri=https%3A%2F%2Fmcstats.ml&scope=bot"
-			);
-			break;
-		case "server":
-			if (args.length == 0) {
-				db.get("SELECT * FROM `servers` WHERE `DISCORD` = ?", serverID, function (err, res) {
-					if (err) msg.channel.send("There was an error with the query.");
-					else if (!res) msg.channel.send("No default server found.");
-					else
-						msg.channel.send(
-							"The default MC server for " +
-								msg.guild.name +
-								" is `" +
-								res.IP +
-								(res.PORT !== "25565" ? ":" + res.PORT : "") +
-								"`."
-						);
-				});
-			} else if (args.length >= 1) {
-				let member = msg.guild.member(msg.author);
-				if (member.hasPermission("MANAGE_MESSAGES") || member.id === "276363003270791168" /* :p */) {
-					db.get("SELECT * FROM `servers` WHERE `DISCORD` = ?", serverID, function (err, res) {
-						if (err) msg.channel.send("There was an error with the query.");
-						else {
-							let port;
-							if ((args.length >= 2 && parseInt(args[1])) || false) port = args[1];
-							else port = "25565";
-							let SQL;
-							if (!res) {
-								SQL = db.prepare("INSERT INTO `servers` (DISCORD, IP, PORT) VALUES ($id, $ip, $port)");
-							} else {
-								SQL = db.prepare("UPDATE `servers` SET IP = $ip, PORT = $port WHERE DISCORD = $id");
-							}
-							SQL.run({ $id: serverID, $ip: args[0], $port: port }, function (err) {
-								if (err) msg.channel.send("There was an error with the query.");
-								else msg.channel.send("Server updated.");
-							});
-						}
-					});
-				} else {
-					msg.channel.send("You can't do this.");
-				}
-			}
-			break;
-		default:
-			const handle = (err, server) => {
-				if (err) {
-					msg.channel.send("The server is offline.");
-				} else if (command === "motd") {
-					if (typeof server.description !== "string") {
-						msg.channel.send("```\n" + server.description.extra.map((a) => a.text).join("\n") + "\n```");
-					} else {
-						msg.channel.send("```\n" + server.description.replace(/§[a-zA-Z0-9]/g, "") + "\n```");
-					}
-				} else if (command === "ping") {
-					msg.channel.send("Latency: " + server.latency + "ms");
-				} else if (command === "players") {
-					msg.channel.send(
-						`There are ${server.players.online}/${server.players.max} people online.${
-							server.players.sample && server.players.sample.length > 0
-								? "\nCurrent players:\n```\n" + server.players.sample.map((a) => a.name).join("\n") + "\n```"
-								: ""
-						}`
-					);
-				} else if (command === "icon") {
-					msg.channel.send(new Discord.MessageAttachment("data:image/gif;base64," + server.favicon));
-				}
-			};
+	if (!client.commands.has(command)) return;
 
-			let ip,
-				port = "25565";
-			if (args.length !== 0) {
-				ip = args[0];
-				if (args.length >= 2) port = args[1];
-				mc.ping({ host: ip, port: port }, handle);
-			} else {
-				db.get("SELECT * FROM `servers` WHERE `DISCORD` = ?", serverID, function (err, res) {
-					if (err) msg.channel.send("There was an error with the query.");
-					else if (!res) msg.channel.send("Please specify a server or set a default one.");
-					else {
-						ip = res.IP;
-						port = res.PORT;
-						mc.ping({ host: ip, port: port }, handle);
-					}
-				});
-			}
-			break;
+	try {
+		client.commands.get(command).execute(client, message, args, gld);
+	} catch (e) {
+		message.reply("couldn't execute command: `" + e.message + "`!");
 	}
 });
