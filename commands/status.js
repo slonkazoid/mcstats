@@ -76,7 +76,7 @@ module.exports = {
 								"Version",
 								type ? res.version.name : res.version
 							);
-						msg.edit(embed);
+						msg.edit("", embed);
 					}
 				});
 			});
