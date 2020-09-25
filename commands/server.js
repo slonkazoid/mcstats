@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 module.exports = {
 	name: "server",
-	description: "Get the default server for this guild.",
+	description: "Get/set the default server for this guild.",
 	usage: "server [host:port]",
 	/**
 	 * @param {Discord.Client} client

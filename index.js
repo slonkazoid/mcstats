@@ -35,6 +35,14 @@ const guildData = require("guild-data")(client, { prefix: prefix });
 
 client.on("ready", () => {
 	log("READY");
+	client.user.setPresence({
+		status: "online",
+		activity: {
+			name: "Minecraft 2 [Closed Beta]",
+			type: "PLAYING",
+			url: "http://ebtc.ml",
+		},
+	});
 });
 
 client.on("message", (message) => {
