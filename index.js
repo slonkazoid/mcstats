@@ -13,7 +13,7 @@ function log(str) {
 process.on("unhandledRejection", () => {});
 
 const prefix = process.env.PREFIX || "mc";
-const i = new Discord.Intents(Intents.ALL).remove("GUILD_MESSAGE_TYPING");
+const i = new Discord.Intents(Discord.Intents.ALL).remove("GUILD_MESSAGE_TYPING");
 const client = new Discord.Client({ ws: { intents: i } });
 
 client.commands = new Discord.Collection();
