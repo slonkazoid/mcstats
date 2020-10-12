@@ -13,8 +13,9 @@ function log(str) {
 process.on("unhandledRejection", () => {});
 
 const prefix = process.env.PREFIX || "mc";
+const i = new Discord.Intents(Intents.ALL).remove("GUILD_MESSAGE_TYPING");
+const client = new Discord.Client({ ws: { intents: i } });
 
-const client = new Discord.Client();
 client.commands = new Discord.Collection();
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
