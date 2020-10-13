@@ -27,7 +27,7 @@ module.exports = {
 				cmd.name,
 				`${cmd.description}
 			**Usage:** \`${cmd.usage}\`
-			${cmd.aliases.length > 0 ? "**Aliases:**" + cmd.aliases.join(" ") : ""}`
+			${cmd.aliases.length > 0 ? "**Aliases:** " + cmd.aliases.join(" ") : ""}`
 			);
 		});
 		message.channel.send(embed);
