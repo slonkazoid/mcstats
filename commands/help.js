@@ -24,7 +24,8 @@ module.exports = {
 			embed.addField(
 				cmd.name,
 				`${cmd.description}
-			**Usage:** \`${cmd.usage}\``
+			**Usage:** \`${cmd.usage}\`
+			**Aliases:** ${cmd.aliases.join(" ")}`
 			);
 		});
 		message.channel.send(embed);
