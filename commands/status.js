@@ -49,7 +49,12 @@ module.exports = {
 								"MOTD",
 								(type
 									? typeof res.description === "object"
-										? res.description.text
+										? res.description.extra
+											? (res.description.text || "") +
+											  res.description.extra
+													.map((x) => x.text)
+													.join("")
+											: res.description.text
 										: res.description
 									: res.motd) || "A Minecraft Server"
 							)
