@@ -3,6 +3,7 @@ module.exports = {
 	name: "server",
 	description: "Get/set the default server for this guild.",
 	usage: "server [host:port]",
+	aliases: [],
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message

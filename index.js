@@ -13,13 +13,18 @@ function log(str) {
 process.on("unhandledRejection", () => {});
 
 const prefix = process.env.PREFIX || "mc";
-const i = new Discord.Intents(Discord.Intents.ALL).remove("GUILD_MESSAGE_TYPING");
+const i = new Discord.Intents(Discord.Intents.ALL).remove(
+	"GUILD_MESSAGE_TYPING"
+);
 const client = new Discord.Client({ ws: { intents: i } });
 
 client.commands = new Discord.Collection();
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
+	command.aliases.forEach((alias) => {
+		client.commands.set(alias, command);
+	});
 }
 client
 	.login(process.env.TOKEN)

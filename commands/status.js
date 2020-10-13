@@ -6,6 +6,7 @@ module.exports = {
 	description:
 		"Display the status of the specified server or the default one.",
 	usage: "name args",
+	aliases: ["stats"],
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message

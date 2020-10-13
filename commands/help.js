@@ -3,6 +3,7 @@ module.exports = {
 	name: "help",
 	description: "Get a list of commands.",
 	usage: "help",
+	aliases: [],
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message

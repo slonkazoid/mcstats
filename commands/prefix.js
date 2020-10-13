@@ -3,6 +3,7 @@ module.exports = {
 	name: "prefix",
 	description: "Get/set the prefix for this guild.",
 	usage: "prefix [new]",
+	aliases: [],
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message

@@ -3,6 +3,7 @@ module.exports = {
 	name: "invite",
 	description: "Get an invite link for the bot.",
 	usage: "invite",
+	aliases: [],
 	/**
 	 * @param {Discord.Client} client
 	 * @param {Discord.Message} message
