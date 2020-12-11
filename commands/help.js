@@ -11,9 +11,7 @@ module.exports = {
 	 * @param {Object} gld
 	 */
 	execute(client, message, args, gld) {
-		const commands = [
-			...new Set(Array.from(client.commands.entries()).map((x) => x[1])),
-		];
+		const commands = [...new Set(Array.from(client.commands.entries()).map((x) => x[1]))];
 		const embed = new Discord.MessageEmbed()
 			.setTitle("MCstats")
 			.setColor("GREEN")

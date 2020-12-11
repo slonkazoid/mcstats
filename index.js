@@ -2,9 +2,7 @@ require("dotenv").config();
 const Discord = require("discord.js");
 const shlex = require("shlex");
 const fs = require("fs");
-const commandFiles = fs
-	.readdirSync("./commands")
-	.filter((file) => file.endsWith(".js"));
+const commandFiles = fs.readdirSync("./commands").filter((file) => file.endsWith(".js"));
 
 function log(str) {
 	if (process.env.NO_LOG) return;
@@ -13,9 +11,7 @@ function log(str) {
 process.on("unhandledRejection", () => {});
 
 const prefix = process.env.PREFIX || "mc";
-const i = new Discord.Intents(Discord.Intents.ALL).remove(
-	"GUILD_MESSAGE_TYPING"
-);
+const i = new Discord.Intents(Discord.Intents.ALL).remove("GUILD_MESSAGE_TYPING");
 const client = new Discord.Client({ ws: { intents: i } });
 
 client.commands = new Discord.Collection();
@@ -42,11 +38,12 @@ const guildData = require("guild-data")(client, { prefix: prefix });
 client.on("ready", () => {
 	log("READY");
 	client.user.setPresence({
+		// if discord decides to work
 		status: "online",
 		activity: {
-			name: "Minecraft 2 [Closed Beta]",
-			type: "PLAYING",
-			url: "http://ebtc.ml",
+			name: "Minecraft 2 [CLOSED BETA]",
+			type: "STREAMING",
+			url: "http://lm.aooa.ml",
 		},
 	});
 });
@@ -58,10 +55,7 @@ client.on("message", (message) => {
 	if (!message.guild) return;
 	if (user.bot) return;
 	const gld = guildData(message.guild.id);
-	if (
-		!message.content.startsWith(gld.prefix) &&
-		!message.content.startsWith("<@!" + id + ">")
-	)
+	if (!message.content.startsWith(gld.prefix) && !message.content.startsWith("<@!" + id + ">"))
 		return;
 	else if (message.content.startsWith("<@!" + id + ">")) mention = true;
 

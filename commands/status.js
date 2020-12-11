@@ -3,9 +3,8 @@ const mc = require("minecraft-protocol");
 
 module.exports = {
 	name: "status",
-	description:
-		"Display the status of the specified server or the default one.",
-	usage: "name args",
+	description: "Display the status of the specified server or the default one.",
+	usage: "status [ip:port]",
 	aliases: ["stats"],
 	/**
 	 * @param {Discord.Client} client
@@ -29,9 +28,7 @@ module.exports = {
 							)
 							.setColor("RED")
 							.setTitle("Error")
-							.setDescription(
-								"Got error while pinging `" + spec + "`."
-							)
+							.setDescription("Got error while pinging `" + spec + "`.")
 							.addField("Details", err.message);
 						msg.edit(embed);
 					} else {
@@ -51,37 +48,29 @@ module.exports = {
 									? typeof res.description === "object"
 										? res.description.extra
 											? (res.description.text || "") +
-											  res.description.extra
-													.map((x) => x.text)
-													.join("")
+											  res.description.extra.map((x) => x.text).join("")
 											: res.description.text
 										: res.description
 									: res.motd) || "A Minecraft Server"
 							)
 							.addField(
 								"Player Count",
-								`${
-									type ? res.players.online : res.playerCount
-								}/${type ? res.players.max : res.maxPlayers}`
+								`${type ? res.players.online : res.playerCount}/${
+									type ? res.players.max : res.maxPlayers
+								}`
 							)
 							.addField(
 								"Players",
 								(type
-									? (res.players.sample || [])
-											.map((x) => x.name)
-											.join("\n")
-									: false) ||
-									"Can't list players or server empty."
+									? (res.players.sample || []).map((x) => x.name).join("\n")
+									: false) || "Can't list players or server empty."
 							)
 							.addField(
 								"Latency",
 								(type ? res.latency + "ms" : false) ||
 									"Can't get latency information."
 							)
-							.addField(
-								"Version",
-								type ? res.version.name : res.version
-							);
+							.addField("Version", type ? res.version.name : res.version);
 						msg.edit("", embed);
 					}
 				});
